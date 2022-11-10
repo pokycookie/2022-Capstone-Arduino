@@ -103,7 +103,9 @@ void getSerial() {
       float form = atof(result[4]);
       float temp = atof(result[5]);
       float humi = atof(result[6]);
-      httpPOST(pm10, pm25, pm100, form, temp, humi);
+      if (WiFi.status() == WL_CONNECTED){
+        httpPOST(pm10, pm25, pm100, form, temp, humi);
+      }
     } else if(String(result[0]).equals(String("SSID"))) {
       String ssid = String(result[1]);
       Serial.println(ssid);
