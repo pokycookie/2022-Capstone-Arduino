@@ -3,7 +3,15 @@
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
 
+#define wifiPin 5 // D1
+#define httpPin 4 // D2
+
+//char* ssid = "SK_WiFiGIGA3E6C";
+//char* pw = "2005027907";
+
 void httpPOST(float pm10, float pm25, float pm100, float form, float temp, float humi) {
+  digitalWrite(httpPin, HIGH);
+  
   StaticJsonDocument<JSON_OBJECT_SIZE(6)> doc;
   doc["pm10"] = pm10;
   doc["pm25"] = pm25;
@@ -22,15 +30,22 @@ void httpPOST(float pm10, float pm25, float pm100, float form, float temp, float
 
   int httpResponseCode = http.POST(body);
   Serial.println(http.getString());
-  if (httpResponseCode > 0) break;
-  else Serial.println("Error HTTP");
-  tr--;
 
+  int tr = 5;
+  while(tr > 0) {
+    if (httpResponseCode > 0) break;
+    else Serial.println("Error HTTP");
+    delay(100);
+    tr--;
+  }
   http.end();
+
+  digitalWrite(httpPin, LOW);
 }
 
 void resetWifi(const char* ssid, const char* password) {
   int wifiTry = 0;
+  digitalWrite(wifiPin, LOW);
   
   // Turn OFF
   if (WiFi.status() == WL_CONNECTED) WiFi.mode(WIFI_OFF);
@@ -49,6 +64,7 @@ void resetWifi(const char* ssid, const char* password) {
   }
   if (WiFi.status() == WL_CONNECTED){
     Serial.println("WiFi Connected");
+    digitalWrite(wifiPin, HIGH);
   }
 }
 
@@ -131,6 +147,10 @@ void getSerial() {
 void setup() {
   // Serial
   Serial.begin(115200);
+
+  // LED
+  pinMode(wifiPin, OUTPUT);
+  pinMode(httpPin, OUTPUT);
   
   // EEPROM
   EEPROM.begin(1000);
