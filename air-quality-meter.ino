@@ -3,6 +3,7 @@
 #include <SoftwareSerial.h>
 
 #define blePin 13
+#define bzrPin 12
 
 SoftwareSerial dust(4,5); // (TX, RX)
 SoftwareSerial esp(8,9); // (TX, RX)
