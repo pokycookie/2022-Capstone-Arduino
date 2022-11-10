@@ -142,6 +142,12 @@ void getPMS() {
   Serial.println();
   Serial.println();
 
+  if (pm10 > 75 || pm25 > 75 || pm100 > 150 || form > 922) {
+    digitalWrite(bzrPin, HIGH);
+  } else {
+    digitalWrite(bzrPin, LOW);
+  }
+
   clearLine(0);
   lcd.print("TEMP: ");
   lcd.print(temp);
@@ -173,6 +179,12 @@ void getPMS() {
     String str = String("UNO ") + String(s_pm10) + String(" ") + String(s_pm25) + String(" ") + String(s_pm100) + String(" ") + String(s_form) + String(" ") + String(s_temp) + String(" ") + String(s_humi) + String(" ");
     esp.print(str);
     postCount = 0;
+    s_pm10 = 0;
+    s_pm25 = 0;
+    s_pm100 = 0;
+    s_form = 0;
+    s_temp = 0;
+    s_humi = 0;
   }
 
   // Bluetooth Mode
@@ -198,6 +210,7 @@ void setup() {
 
   // LED
   pinMode(blePin, OUTPUT);
+  pinMode(bzrPin, OUTPUT);
 
   // LCD
   lcd.begin(20, 4);
