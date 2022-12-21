@@ -6,9 +6,6 @@
 #define wifiPin 5 // D1
 #define httpPin 4 // D2
 
-//char* ssid = "SK_WiFiGIGA3E6C";
-//char* pw = "2005027907";
-
 void httpPOST(float pm10, float pm25, float pm100, float form, float temp, float humi) {
   digitalWrite(httpPin, HIGH);
   
